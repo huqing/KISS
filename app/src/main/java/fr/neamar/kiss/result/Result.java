@@ -86,11 +86,19 @@ public abstract class Result {
      */
     public abstract View display(Context context, int position, View convertView, FuzzyScore fuzzyScore);
 
-    public void displayHighlighted(StringNormalizer.Result normalized, String text, FuzzyScore fuzzyScore, TextView view, Context context) {
+    public void displayHighlighted(
+            StringNormalizer.Result normalized, String text, FuzzyScore fuzzyScore,
+            TextView view, boolean hideIfNoMatch, Context context
+    ) {
         FuzzyScore.MatchInfo matchInfo = fuzzyScore.match(normalized.codePoints);
 
         if (!matchInfo.match) {
-            view.setText(text);
+            if (hideIfNoMatch) {
+                view.setVisibility(View.GONE);
+            } else {
+                view.setVisibility(View.VISIBLE);
+                view.setText(text);
+            }
             return;
         }
 
@@ -105,8 +113,18 @@ public abstract class Result {
                     Spannable.SPAN_INCLUSIVE_INCLUSIVE
             );
         }
+        view.setVisibility(View.VISIBLE);
         view.setText(enriched);
     }
+
+    public void displayHighlighted(
+            StringNormalizer.Result normalized, String text, FuzzyScore fuzzyScore,
+            TextView view, Context context
+    ) {
+        displayHighlighted(normalized, text, fuzzyScore, view, false, context);
+    }
+
+
 
     /**
      * How to display the popup menu

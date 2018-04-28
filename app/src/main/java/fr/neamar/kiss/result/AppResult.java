@@ -59,14 +59,15 @@ public class AppResult extends Result {
         displayHighlighted(appPojo.normalizedName, appPojo.getName(), fuzzyScore, appName, context);
 
         TextView tagsView = view.findViewById(R.id.item_app_tag);
-        // Hide tags view if tags are empty or if user has selected to hide them when query doesn't match
-        /*if (appPojo.getTags().isEmpty() ||
-                (!prefs.getBoolean("tags-visible", true) && appPojo.tagsMatchPositions.isEmpty())) {
+        // Hide tags view if tags are empty
+        if (appPojo.getTags().isEmpty()) {
             tagsView.setVisibility(View.GONE);
         } else {
-            tagsView.setVisibility(View.VISIBLE);
-            tagsView.setText(appPojo.getTags());
-        }*/
+            displayHighlighted(
+                    appPojo.normalizedTags, appPojo.getTags(), fuzzyScore,
+                    tagsView, !prefs.getBoolean("tags-visible", true), context
+            );
+        }
 
         final ImageView appIcon = view.findViewById(R.id.item_app_icon);
         if (!prefs.getBoolean("icons-hide", false)) {

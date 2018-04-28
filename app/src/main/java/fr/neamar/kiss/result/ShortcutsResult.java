@@ -52,14 +52,16 @@ public class ShortcutsResult extends Result {
         shortcutName.setText(shortcutPojo.getName());
 
         TextView tagsView = v.findViewById(R.id.item_app_tag);
-        //Hide tags view if tags are empty or if user has selected to hide them and the query doesn't match tags
-        /*if (shortcutPojo.getTags().isEmpty() ||
-                (!prefs.getBoolean("tags-visible", true) && !shortcutPojo.tagsMatchPositions.isEmpty())) {
+
+        // Hide tags view if tags are empty
+        if (shortcutPojo.getTags().isEmpty()) {
             tagsView.setVisibility(View.GONE);
         } else {
-            tagsView.setVisibility(View.VISIBLE);
-            tagsView.setText(shortcutPojo.getTags());
-        }*/
+            displayHighlighted(
+                    shortcutPojo.normalizedTags, shortcutPojo.getTags(), fuzzyScore,
+                    tagsView, !prefs.getBoolean("tags-visible", true), context
+            );
+        }
 
         final ImageView shortcutIcon = v.findViewById(R.id.item_shortcut_icon);
         final ImageView appIcon = v.findViewById(R.id.item_app_icon);
