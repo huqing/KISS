@@ -76,7 +76,7 @@ public class LoadContactsPojos extends LoadPojos<ContactsPojo> {
                     if (contact.phone == null) {
                         contact.phone = "";
                     }
-                    contact.phoneSimplified = PhoneNormalizer.simplifyPhoneNumber(contact.phone);
+                    contact.normalizedPhone = PhoneNormalizer.simplifyPhoneNumber(contact.phone);
                     contact.starred = cur.getInt(starredIndex) != 0;
                     contact.primary = cur.getInt(isPrimaryIndex) != 0;
                     String photoId = cur.getString(photoIdIndex);
@@ -145,10 +145,10 @@ public class LoadContactsPojos extends LoadPojos<ContactsPojo> {
 
             // If no primary available, add all (excluding duplicates).
             if (!hasPrimary) {
-                HashSet<String> added = new HashSet<>(phones.size());
+                HashSet<int[]> added = new HashSet<>(phones.size());
                 for (ContactsPojo contact : phones) {
-                    if (!added.contains(contact.phoneSimplified)) {
-                        added.add(contact.phoneSimplified);
+                    if (!added.contains(contact.normalizedPhone.codePoints)) {
+                        added.add(contact.normalizedPhone.codePoints);
                         contacts.add(contact);
                     }
                 }
